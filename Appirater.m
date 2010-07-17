@@ -44,7 +44,7 @@ NSString *const kAppiraterCurrentVersion			= @"kAppiraterCurrentVersion";
 NSString *const kAppiraterRatedCurrentVersion		= @"kAppiraterRatedCurrentVersion";
 NSString *const kAppiraterDeclinedToRate			= @"kAppiraterDeclinedToRate";
 
-NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=APP_ID&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software";
+NSString *templateReviewURL = @"http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=APP_ID&mt=8";
 
 @interface Appirater ()
 @property(nonatomic, retain) UIAlertView *alertView;
@@ -78,10 +78,10 @@ NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.
 	
     BOOL isReachable = flags & kSCNetworkFlagsReachable;
     BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
-	BOOL nonWiFi = flags & kSCNetworkReachabilityFlagsTransientConnection;
+    BOOL nonWiFi = flags & kSCNetworkReachabilityFlagsTransientConnection;
 	
-	NSURL *testURL = [NSURL URLWithString:@"http://www.apple.com/"];
-	NSURLRequest *testRequest = [NSURLRequest requestWithURL:testURL  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20.0];
+    NSURL *testURL = [NSURL URLWithString:@"http://www.apple.com/"];
+    NSURLRequest *testRequest = [NSURLRequest requestWithURL:testURL  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20.0];
     NSURLConnection *testConnection = [[NSURLConnection alloc] connectionWithRequest:testRequest delegate:self];
 	
     return ((isReachable && !needsConnection) || nonWiFi) ? (testConnection ? YES : NO) : NO;
