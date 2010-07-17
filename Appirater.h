@@ -97,7 +97,7 @@ extern NSString *const kAppiraterDeclinedToRate;
 #define APPIRATER_DEBUG				NO
 
 @interface Appirater : NSObject <UIAlertViewDelegate> {
-
+  UIAlertView *alertView;
 }
 
 + (void)appLaunched;

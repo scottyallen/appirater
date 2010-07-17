@@ -46,6 +46,10 @@ NSString *const kAppiraterDeclinedToRate			= @"kAppiraterDeclinedToRate";
 
 NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=APP_ID&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software";
 
+@interface Appirater ()
+@property(nonatomic, retain) UIAlertView *alertView;
+@end
+
 @interface Appirater (hidden)
 - (BOOL)connectedToNetwork;
 @end
@@ -78,7 +82,7 @@ NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.
 	
 	NSURL *testURL = [NSURL URLWithString:@"http://www.apple.com/"];
 	NSURLRequest *testRequest = [NSURLRequest requestWithURL:testURL  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20.0];
-	NSURLConnection *testConnection = [[NSURLConnection alloc] initWithRequest:testRequest delegate:self];
+    NSURLConnection *testConnection = [[NSURLConnection alloc] connectionWithRequest:testRequest delegate:self];
 	
     return ((isReachable && !needsConnection) || nonWiFi) ? (testConnection ? YES : NO) : NO;
 }
@@ -88,9 +92,18 @@ NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.
 
 @implementation Appirater
 
+@synthesize alertView;
+
+Appirater *appirater;
+
 + (void)appLaunched {
-	Appirater *appirater = [[Appirater alloc] init];
+	appirater = [[Appirater alloc] init];
 	[NSThread detachNewThreadSelector:@selector(_appLaunched) toTarget:appirater withObject:nil];
+}
+
+- (void)dealloc {
+  self.alertView = nil;
+  [super dealloc];
 }
 
 - (void)_appLaunched {
@@ -177,12 +190,12 @@ NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.
 }
 
 - (void)showPrompt {
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
+	self.alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
 														message:APPIRATER_MESSAGE
 													   delegate:self
 											  cancelButtonTitle:APPIRATER_CANCEL_BUTTON
 											  otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
-	[alertView show];
+	[self.alertView show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -213,8 +226,8 @@ NSString *templateReviewURL = @"itms-apps://itunes.apple.com/WebObjects/MZStore.
 	
 	[userDefaults synchronize];
 	
-	[alertView release];
-	[self release];
+	[self.alertView release];
+	[appirater release];
 }
 
 @end
